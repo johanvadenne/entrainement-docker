@@ -1,0 +1,53 @@
+# version dockor
+version: "3.3"
+
+# déclaration des différents services
+services:
+  wordpress:
+    image: wordpress
+    # Comportement en cas de plantage (redémarrage auto)
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: Mot2passe
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wordpress:/var/www/html
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+  
+  db:
+    # image mariadb
+    image: mariadb
+    # Comportement en cas de plantage (redémarrage auto)
+    restart: always
+    # variable d'environement
+    environment:
+      # mdp mariadb
+      MARIADB_ROOT_PASSWORD: Mot2passe
+      
+    ports:
+      - 3308:3306
+  
+  phpmyadmin:
+    # image phpmyadmin
+    image: phpmyadmin
+    # Comportement en cas de plantage (redémarrage auto)
+    restart: always
+    # variable d'environement
+    environment:
+      PMA_HOST: db # a qui je me connect
+      # PMA_USER: phpmyadmin # user
+      # PMA_PASSWORD: Mot2passe # mdp
+    # ports
+    ports:
+      - 8081:80
+    depends_on:
+      - db
+
+volumes:
+  wordpress:
+  db:
